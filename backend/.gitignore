@@ -1,0 +1,38 @@
+# Prerequisites: Log files and local databases
+*.log
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Environments and Secrets (NEVER commit these)
+.env
+.env.local
+.env.*.local
+
+# Dependency directories
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+jspm_packages/
+.pnp
+.pnp.js
+
+# Build and Output directories
+dist/
+build/
+out/
+target/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
