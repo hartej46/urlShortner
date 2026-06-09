@@ -1,0 +1,1 @@
+export const redisKey = (type,id) => `${type}:${id}`;
