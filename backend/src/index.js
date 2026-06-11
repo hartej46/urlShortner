@@ -1,11 +1,6 @@
-import dotenv from "dotenv";
-
-dotenv.config({
-    path:'./env'
-})
-
-import client from "./db/redis";
-import connectDB from "./db";
+import "./env.js";
+import client from "./db/redis.js";
+import connectDB from "./db/index.js";
 import app from './app.js'
 
 const startServer = async () => {
