@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const UelSchema = new Schema(
     {
-        url: {
+        originalUrl: {
             type: String,
             required: true
         },
-        shortUrlId:{
+        shortId:{
             type: String,
             required: true,
         },
