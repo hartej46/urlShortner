@@ -1,11 +1,13 @@
-import client from "../db/redis";
-import { Url } from "../model/url.model";
-import asyncHandler from "../Utlis/asyncHandler";
-import { redisKey } from "../Utlis/redisKey";
+import client from "../db/redis.js";
+import { Url } from "../model/url.model.js";
+import asyncHandler from "../Utlis/asyncHandler.js";
+import { redisKey } from "../Utlis/redisKey.js";
 import { nanoid } from "nanoid";
 
 const createShortUrl = asyncHandler(async (req, res) => {
-    const {originalUrl} = req.body;
+    const urlRecived = req.body;
+    const originalUrl = urlRecived.url
+    console.log("Original URL", urlRecived)
     if (!originalUrl || !originalUrl.trim()) return res.json({
         success: false,
         message: "Return Proper URL"
@@ -34,7 +36,7 @@ const createShortUrl = asyncHandler(async (req, res) => {
 })
 
 const handleUrlRedirection = asyncHandler( async (req, res) => {
-    const { shortId } = req.params;
+    const shortId = req.params.shortId;
 
     const cachedUrl = await client.get(redisKey('url',shortId));
     if (cachedUrl) { 
@@ -53,8 +55,6 @@ const handleUrlRedirection = asyncHandler( async (req, res) => {
 
     return res.redirect(originalData.originalUrl);
 })
-
-// const deleteUrlRedirection //I will design it later
 
 export {
     createShortUrl,
