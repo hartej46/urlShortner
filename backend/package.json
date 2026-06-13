@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "This is link shortner backend . My summer project",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "dev": "node src/index.js"
   },
   "keywords": [
     "url",
@@ -20,6 +22,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "ioredis": "^5.11.1",
+    "mongodb": "^7.3.0",
     "mongoose": "^9.6.3",
     "nanoid": "^5.1.11",
     "random-string-generator": "^1.0.7",
