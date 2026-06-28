@@ -14,6 +14,7 @@ const createShortUrl = asyncHandler(async (req, res) => {
     })
 
     let shortId = nanoid(8);
+    console.log("Hi")
     let checkShortId = await Url.findOne({shortId});
 
     if (checkShortId) {
@@ -22,6 +23,7 @@ const createShortUrl = asyncHandler(async (req, res) => {
             checkShortId = await Url.findOne({shortId});
         }
     }
+    console.log("Bye")
     const newUrl = await Url.create({
             shortId,
             originalUrl,
