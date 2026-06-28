@@ -22,8 +22,8 @@ function App() {
       console.log(response)
       setUrl(response)
     } catch (error) {
-      setError(error.response.data.message)
-      throw error.response.data.message
+      console.error("Shortener error:", error)
+      setError(error)
     } finally {
       setInput("")
       setLoading(false)
@@ -31,46 +31,61 @@ function App() {
   }
 
   if (loading) {
-  return (
-    <div className="status-container">
-      <div className="loader"></div>
-      <h2>Generating your short URL...</h2>
-    </div>
-  );
-}
+    return (
+      <div className="status-container">
+        <div className="loader"></div>
+        <h2>Generating your short URL...</h2>
+      </div>
+    );
+  }
 
-if (!loading && error) {
-  return (
-    <div className="status-container">
-      <h2 className="error-text">{error}</h2>
-    </div>
-  );
-}
-
-if (!loading && url) {
-  return (
-    <div className="app">
-      <div className="result">
-        <h3>Your hort UrL</h3>
-
-        <a
-          href={url.shortUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {url.shortUrl}
-        </a>
-
-        <button
-          className="copy-btn"
-          onClick={() => navigator.clipboard.writeText(url.shortUrl)}
-        >
-          Copy URL
+  if (!loading && error) {
+    return (
+      <div className="status-container">
+        <h2 className="error-text">{error}</h2>
+        <button className="copy-btn" onClick={() => setError("")}>
+          Try Again
         </button>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
+  if (!loading && url) {
+    return (
+      <div className="app">
+        <div className="result">
+          <h3>Your Short URL</h3>
+
+          <a
+            href={url.shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {url.shortUrl}
+          </a>
+
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
+            <button
+              className="copy-btn"
+              onClick={() => navigator.clipboard.writeText(url.shortUrl)}
+            >
+              Copy URL
+            </button>
+            <button
+              className="copy-btn"
+              style={{ background: '#4b5563' }}
+              onClick={() => {
+                setUrl('');
+                setError('');
+              }}
+            >
+              Shorten Another
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
  
 return (
   <div className="app">
