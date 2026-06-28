@@ -1,122 +1,108 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { shortner} from './services/service'
 import './App.css'
+import { useState } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState('');
+  const [error, setError] = useState("");
 
+  const handleChange = (e) => {
+    setInput(e.target.value)
+  }
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true)
+      const data = {
+        url: input
+      }
+      const response = await shortner(data)
+      console.log(response)
+      setUrl(response)
+    } catch (error) {
+      setError(error.response.data.message)
+      throw error.response.data.message
+    } finally {
+      setInput("")
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <div className="status-container">
+      <div className="loader"></div>
+      <h2>Generating your short URL...</h2>
+    </div>
+  );
+}
+
+if (!loading && error) {
+  return (
+    <div className="status-container">
+      <h2 className="error-text">{error}</h2>
+    </div>
+  );
+}
+
+if (!loading && url) {
+  return (
+    <div className="app">
+      <div className="result">
+        <h3>Your hort UrL</h3>
+
+        <a
+          href={url.shortUrl}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          Count is {count}
+          {url.shortUrl}
+        </a>
+
+        <button
+          className="copy-btn"
+          onClick={() => navigator.clipboard.writeText(url.shortUrl)}
+        >
+          Copy URL
         </button>
-      </section>
+      </div>
+    </div>
+  );
+}
+ 
+return (
+  <div className="app">
+    <div className="hero">
+      <h1>Simplify your links.</h1>
 
-      <div className="ticks"></div>
+      <p>
+        A professional-grade URL shortener built for speed,
+        reliability, and precision analytics.
+      </p>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <form
+        className="url-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={handleChange}
+          placeholder="Paste your long URL here..."
+        />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <button type="submit">
+          Shorten
+        </button>
+      </form>
+    </div>
+  </div>
+);
 }
 
 export default App
