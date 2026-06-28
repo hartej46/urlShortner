@@ -16,8 +16,10 @@ app.use(express.static("public"))
 
 import urlRouter from "./routes/url.router.js";
 import healthRouter from "./routes/health.router.js"
+import { handleUrlRedirection } from "./controller/Url.controller.js";
 
 app.use('/api/v1', urlRouter);
-app.use('',healthRouter)
+app.get('/:shortId',handleUrlRedirection )
+app.use('',healthRouter, )
 
 export default app;
