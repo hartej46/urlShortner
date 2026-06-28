@@ -3,9 +3,9 @@ const asyncHandler = (fn) => async(req, res, next) => {
         await fn(req, res, next)
     } catch (error) {
         console.log("There is something wrong", error);
-        return res.status(err.code || 500).json({
+        return res.status(error.code || 500).json({
             success: false,
-            message: err.message
+            message: error.message
         })
     }
 }
