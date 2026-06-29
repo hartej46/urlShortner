@@ -15,7 +15,6 @@ app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
 app.use(express.static("public"))
 
-// Database connection middleware (Crucial for Vercel/serverless environments)
 app.use(async (req, res, next) => {
     try {
         await connectDB();
