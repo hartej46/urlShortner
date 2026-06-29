@@ -1,18 +1,29 @@
 import Redis from "ioredis";
-
-console.log("Connecting to Redis at:", process.env.URL_REDIS, "Port:", process.env.PORT_REDIS);
-
-const client = new Redis({
+const redisOptions = {
     host: process.env.URL_REDIS,
     port: parseInt(process.env.PORT_REDIS) || 19991,
-    username: process.env.USERNAME,
+    username: process.env.REDIS_USERNAME || "default",
     password: process.env.REDIS_PASSWORD,
-    connectTimeout: 10000 // Keeps serverless cold starts stable
-});
-client.on("error", (err) => {
-    console.error("Redis Connection Error:", err);
+    connectTimeout: 15000, 
+    maxRetriesPerRequest: null, 
+    retryStrategy(times) {
+        const delay = Math.min(times * 50, 2000);
+        return delay; 
+    }
+};
+
+const client = new Redis(redisOptions);
+
+client.on("connect", () => {
+    console.log("🔄 Redis connection initiated...");
 });
 
-console.log("Redis connected")
+client.on("ready", () => {
+    console.log("✅ Redis client is ready and connected securely!");
+});
+
+client.on("error", (err) => {
+    console.error("❌ Redis Client Error:", err.message);
+});
 
 export default client;
