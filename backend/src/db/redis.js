@@ -1,8 +1,8 @@
 import Redis from "ioredis";
 const redisOptions = {
     host: process.env.URL_REDIS,
-    port: parseInt(process.env.PORT_REDIS) || 19991,
-    username: process.env.REDIS_USERNAME || "default",
+    port: parseInt(process.env.PORT_REDIS),
+    username: process.env.REDIS_USERNAME,
     password: process.env.REDIS_PASSWORD,
     connectTimeout: 15000, 
     maxRetriesPerRequest: null, 
