@@ -40,9 +40,14 @@ const createShortUrl = asyncHandler(async (req, res) => {
 const handleUrlRedirection = asyncHandler( async (req, res) => {
     const shortId = req.params.shortId;
 
-    const cachedUrl = await client.get(redisKey('url',shortId));
+    let cachedUrl = null;
+    try {
+        cachedUrl = await client.get(redisKey('url', shortId));
+    } catch (err) {
+        console.error("Redis GET failed, falling back to database:", err.message);
+    }
+
     if (cachedUrl) { 
-        
         return res.redirect(cachedUrl)
     }
     
@@ -53,7 +58,11 @@ const handleUrlRedirection = asyncHandler( async (req, res) => {
                                     message: "URL invalid"
                                 })
 
-    await client.set(redisKey('url',shortId), originalData.originalUrl,'EX', 86400);
+    try {
+        await client.set(redisKey('url', shortId), originalData.originalUrl, 'EX', 86400);
+    } catch (err) {
+        console.error("Redis SET failed:", err.message);
+    }
 
     return res.redirect(originalData.originalUrl);
 })
